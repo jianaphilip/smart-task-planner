@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Task Planner</title>
+  <link rel="stylesheet" href="/styles.css" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="app">
+    <!-- Header -->
+    <header class="header">
+      <h1><i class="fas fa-tasks"></i> Smart Task Planner</h1>
+      <div class="header-controls">
+        <button id="theme-toggle" class="btn-icon" title="Toggle Dark Mode">
+          <i class="fas fa-moon"></i>
+        </button>
+        <button id="focus-mode" class="btn-icon" title="Focus Mode">
+          <i class="fas fa-eye"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="nav">
+      <button class="nav-btn active" data-view="dashboard">
+        <i class="fas fa-tachometer-alt"></i> Dashboard
+      </button>
+      <button class="nav-btn" data-view="today">
+        <i class="fas fa-calendar-day"></i> Today
+      </button>
+      <button class="nav-btn" data-view="upcoming">
+        <i class="fas fa-calendar-week"></i> Upcoming
+      </button>
+      <button class="nav-btn" data-view="overdue">
+        <i class="fas fa-exclamation-triangle"></i> Overdue
+      </button>
+      <button class="nav-btn" data-view="priority">
+        <i class="fas fa-sort-amount-down"></i> Priority
+      </button>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main">
+      <!-- Dashboard View -->
+      <div id="dashboard-view" class="view active">
+        <div class="dashboard-grid">
+          <!-- Goal Input -->
+          <div class="card goal-input">
+            <h2><i class="fas fa-bullseye"></i> Create New Goal</h2>
+            <form id="goal-form">
+              <div class="form-group">
+                <label for="goal">Goal</label>
+                <textarea id="goal" placeholder="e.g., Launch a product in 2 weeks" required></textarea>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="start">Start date</label>
+                  <input id="start" type="date" />
+                </div>
+                <button type="submit" class="btn-primary">
+                  <i class="fas fa-magic"></i> Generate Plan
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Quick Stats -->
+          <div class="card stats">
+            <h2><i class="fas fa-chart-bar"></i> Today's Progress</h2>
+            <div class="stats-grid">
+              <div class="stat">
+                <div class="stat-number" id="today-total">0</div>
+                <div class="stat-label">Total Tasks</div>
+              </div>
+              <div class="stat">
+                <div class="stat-number" id="today-completed">0</div>
+                <div class="stat-label">Completed</div>
+              </div>
+              <div class="stat">
+                <div class="stat-number" id="overdue-count">0</div>
+                <div class="stat-label">Overdue</div>
+              </div>
+              <div class="stat">
+                <div class="stat-number" id="priority-count">0</div>
+                <div class="stat-label">High Priority</div>
+              </div>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" id="progress-fill"></div>
+            </div>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="card quick-actions">
+            <h2><i class="fas fa-bolt"></i> Quick Actions</h2>
+            <div class="action-buttons">
+              <button class="btn-action" id="add-recurring">
+                <i class="fas fa-repeat"></i> Add Recurring Task
+              </button>
+              <button class="btn-action" id="add-manual">
+                <i class="fas fa-plus"></i> Add Manual Task
+              </button>
+              <button class="btn-action" id="view-calendar">
+                <i class="fas fa-calendar"></i> Calendar View
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Plans -->
+        <div class="card recent-plans">
+          <h2><i class="fas fa-history"></i> Recent Plans</h2>
+          <div id="recent-plans-list" class="plans-list">
+            <!-- Plans will be loaded here -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Task Views -->
+      <div id="today-view" class="view">
+        <div class="view-header">
+          <h2><i class="fas fa-calendar-day"></i> Today's Tasks</h2>
+          <div class="view-controls">
+            <button class="btn-secondary" id="refresh-today">
+              <i class="fas fa-sync"></i> Refresh
+            </button>
+          </div>
+        </div>
+        <div class="task-lists">
+          <div class="task-section">
+            <h3><i class="fas fa-tasks"></i> Planned Tasks</h3>
+            <div id="today-tasks" class="task-list">
+              <!-- Today's tasks will be loaded here -->
+            </div>
+          </div>
+          <div class="task-section">
+            <h3><i class="fas fa-repeat"></i> Recurring Tasks</h3>
+            <div id="today-recurring" class="task-list">
+              <!-- Recurring tasks will be loaded here -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="upcoming-view" class="view">
+        <div class="view-header">
+          <h2><i class="fas fa-calendar-week"></i> Upcoming Tasks</h2>
+        </div>
+        <div id="upcoming-tasks" class="task-list">
+          <!-- Upcoming tasks will be loaded here -->
+        </div>
+      </div>
+
+      <div id="overdue-view" class="view">
+        <div class="view-header">
+          <h2><i class="fas fa-exclamation-triangle"></i> Overdue Tasks</h2>
+        </div>
+        <div id="overdue-tasks" class="task-list">
+          <!-- Overdue tasks will be loaded here -->
+        </div>
+      </div>
+
+      <div id="priority-view" class="view">
+        <div class="view-header">
+          <h2><i class="fas fa-sort-amount-down"></i> Priority Order</h2>
+          <p class="view-description">Tasks sorted by smart priority algorithm</p>
+        </div>
+        <div id="priority-tasks" class="task-list">
+          <!-- Priority tasks will be loaded here -->
+        </div>
+      </div>
+    </main>
+
+    <!-- Modals -->
+    <div id="modal-overlay" class="modal-overlay">
+      <div class="modal">
+        <div class="modal-header">
+          <h3 id="modal-title">Modal Title</h3>
+          <button class="btn-icon" id="modal-close">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body" id="modal-body">
+          <!-- Modal content will be loaded here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Task Edit Modal -->
+    <div id="task-modal" class="modal-overlay">
+      <div class="modal">
+        <div class="modal-header">
+          <h3>Edit Task</h3>
+          <button class="btn-icon" id="task-modal-close">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="task-edit-form">
+            <div class="form-group">
+              <label for="edit-title">Title</label>
+              <input type="text" id="edit-title" required>
+            </div>
+            <div class="form-group">
+              <label for="edit-description">Description</label>
+              <textarea id="edit-description"></textarea>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="edit-priority">Priority</label>
+                <select id="edit-priority">
+                  <option value="high">High</option>
+                  <option value="medium">Medium</option>
+                  <option value="low">Low</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="edit-status">Status</label>
+                <select id="edit-status">
+                  <option value="pending">Pending</option>
+                  <option value="completed">Completed</option>
+                  <option value="archived">Archived</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="edit-start-date">Start Date</label>
+                <input type="date" id="edit-start-date">
+              </div>
+              <div class="form-group">
+                <label for="edit-end-date">End Date</label>
+                <input type="date" id="edit-end-date">
+              </div>
+            </div>
+            <div class="modal-actions">
+              <button type="button" class="btn-secondary" id="cancel-edit">Cancel</button>
+              <button type="submit" class="btn-primary">Save Changes</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
+
